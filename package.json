@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "create-admin": "ts-node src/scripts/createAdmin.ts"
+    
   },
   "keywords": [],
   "author": "",

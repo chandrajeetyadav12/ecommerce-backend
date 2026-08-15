@@ -12,10 +12,10 @@ const createAdmin = async () => {
   );
 
   const hashedPassword =
-    await bcrypt.hash("Test@123#", 10);
+    await bcrypt.hash(process.env.ADMIN_PASSWORD as string, 10);
 
   const existingAdmin=await User.findOne({
-    email: "admin@gmail.com"
+    email: process.env.ADMIN_EMAIL,
   });
 
   if (existingAdmin) {
@@ -25,7 +25,7 @@ const createAdmin = async () => {
 
   await User.create({
     name: "Super Admin",
-    email: "admin@gmail.com",
+    email: process.env.ADMIN_EMAIL,
     password: hashedPassword,
     role: "admin",
     status: "approved",
