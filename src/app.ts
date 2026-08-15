@@ -19,6 +19,13 @@ app.use(
 
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "BuyVerse Backend API Running 🚀",
+  });
+});
+
 app.use("/api/auth", authRoutes);
 
 app.use(
