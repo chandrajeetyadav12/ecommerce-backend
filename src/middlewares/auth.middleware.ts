@@ -12,7 +12,13 @@ export const protect = (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
+    const cookieToken = req.cookies?.cookietoken;
+    const authHeader = req.headers.authorization;
+    const bearerToken =
+      authHeader && authHeader.startsWith("Bearer ")
+        ? authHeader.split(" ")[1]
+        : null;
+    const token = cookieToken || bearerToken;
 
     if (!token) {
       return res.status(401).json({
@@ -30,7 +36,7 @@ export const protect = (
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "Invalid Token",
+      message: error,
     });
   }
 };

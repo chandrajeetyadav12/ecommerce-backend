@@ -84,10 +84,13 @@ export const login = async (
       }
     );
 
-    res.cookie("token", token, {
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res.cookie("cookietoken", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
@@ -108,10 +111,12 @@ export const logout = async (
   res: Response
 ) => {
   try {
-    res.clearCookie("token", {
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res.clearCookie("cookietoken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
     });
 
     return res.status(200).json({
