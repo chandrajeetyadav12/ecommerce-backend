@@ -262,7 +262,15 @@ export const getProductById = async (
         const product =
             await Product.findById(
                 req.params.id
-            );
+            )
+                .populate(
+                    "sellerId",
+                    "name email"
+                )
+                .populate(
+                    "category",
+                    "name"
+                );
 
         if (!product) {
             return res.status(404).json({
