@@ -1,4 +1,5 @@
 import Product from "../models/Product";
+import Category from "../models/Category";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary";
 export const createProduct =
     async (req: any, res: any) => {
@@ -110,14 +111,77 @@ export const getProducts =
         res: any
     ) => {
         try {
+            const {
+                category,
+                search,
+            } = req.query;
+
+            const filter: any = {
+                status: "approved",
+            };
+
+            if (
+                category &&
+                category !== "all"
+            ) {
+                const categoryValue =
+                    String(category);
+
+                const categoryDoc =
+                    await Category.findOne({
+                        $or: [
+                            {
+                                _id: categoryValue,
+                            },
+                            {
+                                name: {
+                                    $regex: `^${categoryValue}$`,
+                                    $options: "i",
+                                },
+                            },
+                        ],
+                    }).select("_id");
+
+                if (categoryDoc) {
+                    filter.category =
+                        categoryDoc._id;
+                } else {
+                    filter.category =
+                        categoryValue;
+                }
+            }
+
+            if (
+                search &&
+                typeof search === "string" &&
+                search.trim()
+            ) {
+                const searchValue =
+                    search.trim();
+
+                filter.$or = [
+                    {
+                        name: {
+                            $regex: searchValue,
+                            $options: "i",
+                        },
+                    },
+                    {
+                        description: {
+                            $regex: searchValue,
+                            $options: "i",
+                        },
+                    },
+                ];
+            }
+
             const products =
-                await Product.find({
-                    status:
-                        "approved",
-                }).populate(
+                await Product.find(
+                    filter
+                ).populate(
                     "category",
                     "name"
-                );;
+                );
 
             return res.json({
                 success: true,
