@@ -6,6 +6,7 @@ import sellerRoutes from "./routes/seller.routes";
 import productRoutes from "./routes/product.routes";
 import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
+import addressRoutes from "./routes/address.routes";
 
 const app = express();
 const allowedOrigins = [
@@ -59,4 +60,8 @@ app.use(
   cartRoutes
 );
 
+app.use(
+  "/api/addresses",
+  addressRoutes
+);
 export default app;
