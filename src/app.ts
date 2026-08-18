@@ -7,6 +7,7 @@ import productRoutes from "./routes/product.routes";
 import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes";
 import addressRoutes from "./routes/address.routes";
+import orderRoutes from "./routes/order.routes";
 
 const app = express();
 const allowedOrigins = [
@@ -64,4 +65,6 @@ app.use(
   "/api/addresses",
   addressRoutes
 );
+
+app.use("/api/orders", orderRoutes);
 export default app;

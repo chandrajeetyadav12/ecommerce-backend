@@ -3,6 +3,8 @@ import express from "express";
 import {
   placeOrder,
   getMyOrders,
+  getAllOrders,
+  updateOrderStatus,
 //   getAllOrders,
 //   updateOrderStatus,
 } from "../controllers/order.controller";
@@ -24,18 +26,18 @@ router.get(
   getMyOrders
 );
 
-// router.get(
-//   "/admin/all",
-//   protect,
-//   isAdmin,
-//   getAllOrders
-// );
+router.get(
+  "/admin/all",
+  protect,
+  isAdmin,
+  getAllOrders
+);
 
-// router.put(
-//   "/admin/:id",
-//   protect,
-//   isAdmin,
-//   updateOrderStatus
-// );
+router.put(
+  "/admin/:id",
+  protect,
+  isAdmin,
+  updateOrderStatus
+);
 
 export default router;
