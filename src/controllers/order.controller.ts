@@ -1,6 +1,7 @@
 import Cart from "../models/Cart";
 import Order from "../models/Order";
 import Address from "../models/Address";
+import Product from "../models/Product";
 
 export const placeOrder =
     async (req: any, res: any) => {
@@ -41,6 +42,25 @@ export const placeOrder =
                     message:
                         "Address not found",
                 });
+            }
+
+            for (const item of cart.items) {
+                const productId = item.productId?._id || item.productId;
+                const product = await Product.findById(productId);
+
+                if (!product) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "One of the products in your cart no longer exists",
+                    });
+                }
+
+                if (product.stock < item.quantity) {
+                    return res.status(400).json({
+                        success: false,
+                        message: `Only ${product.stock} item(s) left for ${product.name}`,
+                    });
+                }
             }
 
             const orderItems =
@@ -108,7 +128,21 @@ export const placeOrder =
                             : "paid",
                 });
 
-     
+            await Promise.all(
+                cart.items.map(async (item: any) => {
+                    const productId = item.productId?._id || item.productId;
+
+                    await Product.findByIdAndUpdate(
+                        productId,
+                        {
+                            $inc: {
+                                stock: -item.quantity,
+                            },
+                        }
+                    );
+                })
+            );
+
             await Cart.findOneAndUpdate(
                 { userId: req.user.userId },
                 {
