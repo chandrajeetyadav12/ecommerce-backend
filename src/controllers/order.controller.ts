@@ -96,6 +96,9 @@ export const placeOrder =
                     0
                 );
 
+                const shippingCharge = 0;
+                const totalAmount = subtotal + shippingCharge;
+
             const order =
                 await Order.create({
                     userId:
@@ -116,9 +119,9 @@ export const placeOrder =
 
                     subtotal,
 
-                    shippingCharge: 0,
+                    shippingCharge,
 
-                    totalAmount: subtotal,
+                    totalAmount,
 
                     paymentMethod,
 
