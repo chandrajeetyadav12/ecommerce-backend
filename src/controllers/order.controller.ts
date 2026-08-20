@@ -182,9 +182,23 @@ export const placeOrder =
             "items.productId"
           );
 
+      const overallTotal = orders.reduce(
+        (ordersTotal, order: any) => {
+          const orderItemsTotal = order.items.reduce(
+            (itemsTotal: number, item: any) =>
+              itemsTotal + item.price * item.quantity,
+            0
+          );
+
+          return ordersTotal + orderItemsTotal + (order.shippingCharge || 0);
+        },
+        0
+      );
+
       res.json({
         success: true,
         orders,
+        overallTotal,
       });
     } catch (error: any) {
       res.status(500).json({
